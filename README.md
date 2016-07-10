@@ -4,7 +4,7 @@
 程序名称: **xBASIC**。  
 开源协议: 使用*Apache 2.0*协议。  
 作者(我):   x7890  
-网址:   http://x7890.coding.me/x7890.HTML.xBASIC
+网址:   http://x7890.coding.me/x7890.HTML.xBASIC  
 email:   2225497337@qq.com  
 谢谢您支持我并使用本软件。  
 请在修改源码时保留此版权信息，谢谢。  
