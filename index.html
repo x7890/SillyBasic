@@ -3,21 +3,17 @@
 <meta charset="UTF-8">
 <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0;" name="viewport"/>
 <title>简易basic解释器</title>
-
+<script type="text/javascript">document.title="简易BASIC解释器 By x7890";</script>
 <style type="text/css">
 .text{width:91%;height:250px;font-size:14px;font-family:"Microsoft YaHei";}
 .button{width:30%;height:30px;font-size:20px;}
 </style>
-
-<script type="text/javascript">document.title="简易BASIC解释器 By x7890";</script>
-
 </head>
 <body>
 
 
 <p style="font-size:20px;font-family:'Microsoft YaHei'">
-简易BASIC解释器 By x7890
-
+简易BASIC解释器（原理：将BASIC转为js执行）
 <textarea class="text" id="code" cols=30 rows=20>
 input "n=",n
 i=0
@@ -34,31 +30,41 @@ print "a=";a,"i=";i,"π=";4*a/n
 end
 
 </textarea>
-
 <br>
-
 <input class="button" type="button" id="btnclscode" value="清空代码" onclick="cls('code')">
-
 <input class="button" type="button" id="btnclscon" value="清空输出" onclick="cls('con')">
-
 <input class="button" type="button" id="btnrun" value="转换程序" onclick="run()">
-
 <br>
-<input type="checkbox" id="ckviewcode" unchecked/>
-<label for="ckviewcode">显示转换后的代码</label>
-
-<input type="checkbox" id="ckruncode" checked/>
-<label for="ckruncode">运行代码</label>
-
-<br>
-输出:
-<br>
-
+<input type="checkbox" id="ckviewcode"><label for="ckviewcode">显示转换后的js代码</label>
+<input type="checkbox" id="ckruncode" checked><label for="ckruncode">运行代码</label>
+<br>输出:<br>
 </p>
 
 <textarea class="text" id="con" cols=30 rows=500 readonly="readonly"></textarea>
 
-<script type="text/javascript" src="xbasic.2.2.js"></script>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+<script type="text/javascript" src="xbasic.2.3.js"></script>
+<script type="text/javascript">
+	function elm(e){return document.getElementById(e);}
+	function cls(e){elm(e).value="";}
+	_print=function(s){elm("con").value+=s;};//print是全局的
+	function run(){
+	try{
+		cls("con");
+		var code=elm("code").value;
+		var ocode=BASIC2JS(code);
+		var sline="————————————————————————\n";
+		if(elm("ckviewcode").checked){
+			_print('以上BASIC代码已转化为以下的JavaScript代码:\n'+sline+ocode+sline);
+		}
+		if(elm("ckruncode").checked){
+			_print("开始执行:\n"+sline);eval(ocode);_print('\n'+sline+"执行完毕。\n");
+		}
+		elm("con").setSelectionRange(32767,32767);
+	}catch(e){print(e);}
+	}
+</script>
 
 </body>
 </html>
