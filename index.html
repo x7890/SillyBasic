@@ -1,11 +1,70 @@
 ﻿<html>
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="refresh" content="0;url=xbasic.2.2.html"> 
+<meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0;" name="viewport"/>
+<title>简易basic解释器</title>
+
+<style type="text/css">
+.text{width:91%;height:250px;font-size:14px;font-family:"Microsoft YaHei";}
+.button{width:30%;height:30px;font-size:20px;}
+</style>
+
+<script type="text/javascript">document.title="简易BASIC解释器 By x7890";</script>
+
 </head>
 <body>
+
+
+<p style="font-size:20px;font-family:'Microsoft YaHei'">
+简易BASIC解释器 By x7890
+
+<textarea class="text" id="code" cols=30 rows=20>
+input "n=",n
+i=0
+a=0
+while i<=n
+  x=rand
+  y=rand
+  if x*x+y*y<=1 then
+   a=a+1
+  end if
+  i=i+1
+wend
+print "a=";a,"i=";i,"π=";4*a/n
+end
+
+</textarea>
+
+<br>
+
+<input class="button" type="button" id="btnclscode" value="清空代码" onclick="cls('code')">
+
+<input class="button" type="button" id="btnclscon" value="清空输出" onclick="cls('con')">
+
+<input class="button" type="button" id="btnrun" value="转换程序" onclick="run()">
+
+<br>
+<input type="checkbox" id="ckviewcode" unchecked/>
+<label for="ckviewcode">显示转换后的代码</label>
+
+<input type="checkbox" id="ckruncode" checked/>
+<label for="ckruncode">运行代码</label>
+
+<br>
+输出:
+<br>
+
+</p>
+
+<textarea class="text" id="con" cols=30 rows=500 readonly="readonly"></textarea>
+
+<script type="text/javascript" src="xbasic.2.2.js"></script>
+
 </body>
 </html>
+
+
+
 
 
 
