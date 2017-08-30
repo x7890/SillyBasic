@@ -1,0 +1,269 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0;" name="viewport"/>
+<title>简易basic解释器</title>
+
+<style type="text/css">
+.text{width:91%;height:250px;font-size:14px;font-family:"Microsoft YaHei";}
+.button{width:30%;height:30px;font-size:20px;}
+</style>
+
+</head>
+<body>
+
+
+<p style="font-size:20px;font-family:'Microsoft YaHei'">
+简易BASIC解释器 By x7890
+
+<textarea class="text" id="code" cols=30 rows=20>
+input "n=",n
+i=0
+a=0
+while i<=n
+  x=rand
+  y=rand
+  if x*x+y*y<=1 then
+   a=a+1
+  end if
+  i=i+1
+wend
+print "a=";a,"i=";i,"π=";4*a/n
+end
+
+</textarea>
+
+<br>
+
+<input class="button" type="button" id="btnclscode" value="清空代码" onclick="cls('code')">
+
+<input class="button" type="button" id="btnclscon" value="清空输出" onclick="cls('con')">
+
+<input class="button" type="button" id="btnrun" value="转换程序" onclick="run()">
+
+<input type="checkbox" id="ckviewcode" unchecked/>
+<label for="ckviewcode">显示转换后的代码</label>
+
+<input type="checkbox" id="ckruncode" checked/>
+<label for="ckruncode">运行代码</label>
+
+<br>
+输出:
+<br>
+
+</p>
+
+<textarea class="text" id="con" cols=30 rows=500 readonly="readonly"></textarea>
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+function elm(e){return document.getElementById(e);}
+function cls(e){elm(e).value="";}
+
+
+function CHR(d){return String.fromCharCode(d);}
+function ASC(s){return s.charCodeAt();}
+function UCASE(s){return s.toUpperCase();}
+function LCASE(s){return s.toLowerCase();}
+
+
+function RAND(){return Math.random();}
+
+
+
+function funcconv(s){
+	
+	s=s.replace(/\bCHR\(/ig,"CHR(");
+	s=s.replace(/\bASC\(/ig,"ASC(");
+	s=s.replace(/\bUCASE\(/ig,"UCASE(");
+	s=s.replace(/\bLCASE\(/ig,"LCASE(");
+	
+	s=s.replace(/\bRAND\b(\(\))?/ig,"RAND()");
+	
+	return s;
+}
+
+
+
+function codeconv(s){
+	s=funcconv(s);
+
+	s=s.replace(/(\n\s*END\s*\n)/ig,"\n{out('END\\n');return;}\n");
+	
+
+	//=  ->  ==
+	s=s.replace(/(IF\s+[^\.\n]*[^\.\n><])=(\s*\S+\s+THEN)/ig,"$1==$2");
+	s=s.replace(/(\s*LOOP\s+UNTIL\s[^\.\n]*[^\.\n><])=([^\r\n]+)\n/ig,"$1==$2");
+	s=s.replace(/(\s*WHILE\s[^\.\n]*[^\.\n><])=([^\r\n]+)\n/ig,"$1==$2");
+	
+	s=s.replace(/\bNOT\b/ig,"!");
+	s=s.replace(/\bAND\b/ig,"&&");
+	s=s.replace(/\bOR\b/ig,"||");
+	s=s.replace(/<>/ig,"!=");
+	
+	s=s.replace(/(\s+)THEN(\b)/ig,"){$2");
+	s=s.replace(/(\b)ELSE(\b)/ig,"$1}else{$2");
+	s=s.replace(/(\b)ELSEIF(\s+)/ig,"$1}else if(");
+	s=s.replace(/(\b)ENDIF|(END\s+IF)(\b)/ig,"$1}$3");
+	s=s.replace(/(\b)IF(\s+)/ig,"$1if(");
+
+	s=s.replace(/[\n\r^]([ \s]*)LOOP\s+UNTIL\s+([^\r\n]+)\n/ig,"\n$1}while(!($2));\n");
+	s=s.replace(/[\n\r^]([ \s]*)DO\s+WHILE\s+([^\r\n]+)[\n\r]/ig,"\n$1DO\n$1if(!($2))break;\n");
+	s=s.replace(/(\b)DO(\b)/ig,"$1do{$2") ;
+	s=s.replace(/[\n\r^]([ \s]*)WHILE\s+([^\r\n]+)[\n|\r]/ig,"\n$1while($2){\n");
+	s=s.replace(/(\b)WEND(\b)/ig,"$1}$2");
+	
+	return s;
+}
+
+
+
+function run(){
+	var econ=elm("con");
+	econ.value="";
+	var out=function(s){econ.value+=s;};
+	var code=elm("code").value;
+	var ocode="";
+	var i,s;
+
+try{
+
+ var msplit=function(s,p,b){
+   var a=new Array();
+   if(!s)return a;
+   var t1=0,t2=0,i=0;
+   var li=0;
+   //s=s.replace(/([^"])""([^"])/,'$1"+CHR(34)+"$2');
+  //s=s.replace(/""/ig,'\\"');
+if(!b){
+   while(s&&(i=s.indexOf('""',i))!=-1){
+//out("e:"+s.substr(0,i)+'\n');
+//out("e:"+s.substr(i+2,s.length-(i+2))+'\n');
+     s=s.substr(0,i)+'"+CHR(34)+"'+s.substr(i+2,s.length-(i+2));
+     i+=11;
+    //out("e:"+s.substr(i,s.length-i)+'\n');
+  }
+}
+//out("de:"+s+'\n');
+//a.push("9");return a;
+
+
+   for(i=0;i<s.length;++i){
+     if(i>=s.length)break;
+     if(s[i]=='"')t1=1-t1;
+     if(s[i]=='(')++t2;
+     if(s[i]==')')--t2;
+     if(t1==0&&t2==0&&s[i]==p){
+       //out("s="+s+" i="+i+"  li="+li+"   "+s.substr(li,i-li)+"\n");
+
+a.push(s.substr(li,i-li));
+       li=i+1;
+     }
+   }
+   if(li<s.length)
+     a.push(s.substr(li,s.length-li));
+
+   return a;
+ }
+
+ var cinput=function(s){
+   var a=msplit(s,",");
+   s="";
+   var t="请输入";
+   if(a[0][0]=='"'){
+     t=a[0];
+     a.shift();
+   }
+   for(var i=0;i<a.length;++i)
+     s+=a[i]+"=prompt("+t+",'');\n";
+   return s;
+ }
+
+ var cprint=function(s){
+   s=s.trim();
+   if(",;".indexOf(s.substr(s.length-1,1))==-1)s=s+'+"\\n"';
+   if(",".indexOf(s.substr(s.length-1,1))!=-1)s=s.substr(0,s.length-1)+';"\\t"';
+   var a=msplit(s,",");
+   s=a[0];
+   for(var i=1;i<a.length;++i)
+     s+='+"\\t"+'+a[i];
+   a=msplit(s,";",1);
+   s=a[0];
+   for(var i=1;i<a.length;++i)
+     s+="+"+a[i];
+   return "out("+s+");\n";
+ }
+	
+	if(code.substr(code.length-1,1!='\n'))code+='\n';
+	var acode=code.split('\n');
+	ocode+='function _exec(){\n';	
+	//BASIC要求第一个字符不能为下划线，之后才可以，所以转换中使用的变量名全用下划线开头
+	
+	
+	for(i=0;i<acode.length;++i) {
+		s=acode[i].trim()//.replace(/""/ig,'"+CHR(34)+"');
+		if(s.length>=5&&s.substr(0,5).toLowerCase()=="print"){
+			ocode=ocode+cprint(s.substr(6))+'\n';
+		}else if(s.length>=5&&s.substr(0,5).toLowerCase()=="input"){
+			ocode=ocode+cinput(s.substr(6))+'\n';
+		}else{
+			ocode=ocode+s+'\n';
+		}
+	}
+	
+	ocode+='\n}\n';
+ ocode+='_exec();\n';
+	
+	//out("第一步转换：\n"+ocode+"\n");
+	ocode=codeconv(ocode);
+
+	 var outline=function(){	out("————————————————————————\n");
+}
+
+	if(elm("ckviewcode").checked){
+		out('以上BASIC代码已转化为以下的JavaScript代码:\n');
+  outline();
+		out(ocode);
+   outline();
+	}
+if(elm("ckruncode").checked){
+	out("开始执行:\n");
+ outline();
+	eval(ocode);
+ out('\n');
+ outline();
+ out("执行完毕。\n");
+ }
+	econ.setSelectionRange(32767,32767);
+	
+}catch(e){out(e);}
+}
+
+
+
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
