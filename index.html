@@ -44,11 +44,11 @@ end
 
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
-<script type="text/javascript" src="xbasic.2.3.js"></script>
+<script type="text/javascript" src="xbasic.2.4.js"></script>
 <script type="text/javascript">
 	function elm(e){return document.getElementById(e);}
 	function cls(e){elm(e).value="";}
-	_print=function(s){elm("con").value+=s;};//print是全局的
+	_printstr=function(s){elm("con").value+=s;};//print是全局的
 	function run(){
 	try{
 		cls("con");
@@ -56,13 +56,13 @@ end
 		var ocode=BASIC2JS(code);
 		var sline="————————————————————————\n";
 		if(elm("ckviewcode").checked){
-			_print('以上BASIC代码已转化为以下的JavaScript代码:\n'+sline+ocode+sline);
+			_printstr('以上BASIC代码已转化为以下的JavaScript代码:\n'+sline+ocode+sline);
 		}
 		if(elm("ckruncode").checked){
-			_print("开始执行:\n"+sline);eval(ocode);_print('\n'+sline+"执行完毕。\n");
+			_printstr("开始执行:\n"+sline);eval(ocode);_printstr('\n'+sline+"执行完毕。\n");
 		}
 		elm("con").setSelectionRange(32767,32767);
-	}catch(e){print(e);}
+	}catch(e){_printstr(e);}
 	}
 </script>
 
