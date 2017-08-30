@@ -1,12 +1,12 @@
 
-
+//SillyBasic By x7890
 
 //请先设置输出函数_printstr
 //BASIC要求第一个字符不能为下划线，之后才可以，所以转换中使用的标识符全用下划线开头
 
-vbCr='\r';
-vbLf='\n';
-vbCrLf='\n';
+sbCr='\r';
+sbLf='\n';
+sbCrLf='\n';
 
 //模拟函数实现
 //数学函数
@@ -82,30 +82,30 @@ function INPUTBOX(sPrompt,sTitle,sDefault){
 	return ret;
 }
 
-vbOKOnly=0;
-vbOKCancel=1;
-vbOK=1;
-vbCancel=2;
+sbOKOnly=0;
+sbOKCancel=1;
+sbOK=1;
+sbCancel=2;
 
 function MSGBOX(sPrompt,bButtons,sTitle){
 	if(arguments.length<3)sTitle="";
-	if(arguments.length<2)bButtons=vbOKOnly;
+	if(arguments.length<2)bButtons=sbOKOnly;
 	if(arguments.length<1)sPrompt="";
 	var oldTitle=document.title;
 	if(sTitle!="")document.title=sTitle;
-	var ret=vbOK;
+	var ret=sbOK;
 	switch(bButtons){
-		case vbOKOnly:{
+		case sbOKOnly:{
 			alert(sPrompt);
-			ret=vbOK;
+			ret=sbOK;
 			break;
 		}
-		case vbOKCancel:{
-			ret=confirm(sPrompt)==true?vbOK:vbCancel;
+		case sbOKCancel:{
+			ret=confirm(sPrompt)==true?sbOK:sbCancel;
 			break;
 		}
 		default:{
-			ret=vbOK;
+			ret=sbOK;
 			break;
 		}
 	}
@@ -124,9 +124,9 @@ function MSGBOX(sPrompt,bButtons,sTitle){
 
 
 function _ReplaceConstAndFunctions(s){
-	s=s.replace(/\bvbCr\b/ig,"vbCr");
-	s=s.replace(/\bvbLf\b/ig,"vbLf");
-	s=s.replace(/\bvbCrLf\b/ig,"vbCrLf");
+	s=s.replace(/\bsbCr\b/ig,"sbCr");
+	s=s.replace(/\bsbLf\b/ig,"sbLf");
+	s=s.replace(/\bsbCrLf\b/ig,"sbCrLf");
 	//数学函数
 	s=s.replace(/\bABS\(/ig,"ABS(");
 	s=s.replace(/\bATN\(/ig,"ATN(");
@@ -177,10 +177,10 @@ function _ReplaceConstAndFunctions(s){
 	//对话框类函数没有实现
 	s=s.replace(/\bINPUTBOX\(/ig,"INPUTBOX(");
 	s=s.replace(/[\n\r^]([ \s]*)INPUTBOX\s+([^\r\n]+)[\n|\r]/ig,"\n$1INPUTBOX($2)\n");
-	s=s.replace(/\bvbOKOnly\b/ig,"vbOKOnly");
-	s=s.replace(/\bvbOKCancel\b/ig,"vbOKCancel");
-	s=s.replace(/\bvbOK\b/ig,"vbOK");
-	s=s.replace(/\bvbCancel\b/ig,"vbCancel");
+	s=s.replace(/\bsbOKOnly\b/ig,"sbOKOnly");
+	s=s.replace(/\bsbOKCancel\b/ig,"sbOKCancel");
+	s=s.replace(/\bsbOK\b/ig,"sbOK");
+	s=s.replace(/\bsbCancel\b/ig,"sbCancel");
 	s=s.replace(/\bMSGBOX\(/ig,"MSGBOX(");
 	s=s.replace(/[\n\r^]([ \s]*)MSGBOX\s+([^\r\n]+)[\n|\r]/ig,"\n$1MSGBOX($2)\n");
 
